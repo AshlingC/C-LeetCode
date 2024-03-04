@@ -1,0 +1,34 @@
+#include <string>
+#include <unordered_map>
+
+using namespace std;
+
+class Solution {
+public:
+    bool isScramble(string s1, string s2) {
+        if (s1 == s2) return true;
+        if (s1.length() != s2.length()) return false;
+        
+        int n = s1.length();
+        
+        // Check if the characters in s1 and s2 are the same
+        unordered_map<char, int> count;
+        for (int i = 0; i < n; i++) {
+            count[s1[i]]++;
+            count[s2[i]]--;
+        }
+        for (auto& pair : count) {
+            if (pair.second != 0) return false;
+        }
+        
+        // Try all possible splits
+        for (int i = 1; i < n; i++) {
+            if ((isScramble(s1.substr(0, i), s2.substr(0, i)) && isScramble(s1.substr(i), s2.substr(i))) ||
+                (isScramble(s1.substr(0, i), s2.substr(n - i)) && isScramble(s1.substr(i), s2.substr(0, n - i)))) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+};
